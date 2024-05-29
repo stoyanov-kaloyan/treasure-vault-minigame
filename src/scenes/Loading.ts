@@ -1,4 +1,4 @@
-import { Sprite, Text } from "pixi.js";
+import { Text } from "pixi.js";
 import Scene from "../core/Scene";
 import { centerObjects } from "../utils/misc";
 import Background from "../prefabs/Background";
