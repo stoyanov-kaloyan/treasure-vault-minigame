@@ -1,14 +1,15 @@
 import { Sprite, Text } from "pixi.js";
 import Scene from "../core/Scene";
 import { centerObjects } from "../utils/misc";
+import Background from "../prefabs/Background";
 
 export default class Loading extends Scene {
   name = "Loading";
 
+  private background = new Background("/assets/bg.png");
+
   async load() {
     await this.utils.assetLoader.loadAssetsGroup("Loading");
-
-    const bg = Sprite.from("bgNight");
 
     const text = new Text("Loading...", {
       fontFamily: "Verdana",
@@ -18,9 +19,11 @@ export default class Loading extends Scene {
 
     text.resolution = 2;
 
-    centerObjects(bg, text);
+    centerObjects(text);
 
-    this.addChild(bg, text);
+    this.background.resize(window.innerWidth, window.innerHeight);
+
+    this.addChild(this.background, text);
   }
 
   async start() {

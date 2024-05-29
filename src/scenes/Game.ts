@@ -1,24 +1,20 @@
-import config from "../config";
-import ParallaxBackground from "../prefabs/ParallaxBackground";
 import Scene from "../core/Scene";
 import { Wheel } from "../prefabs/Wheel";
+import Background from "../prefabs/Background";
 
 export default class Game extends Scene {
   name = "Game";
 
-  private background!: ParallaxBackground;
+  private background!: Background;
   private wheel!: Wheel;
 
   load() {
-    this.background = new ParallaxBackground(config.backgrounds.forest);
+    this.background = new Background("/assets/bg.png");
     this.wheel = new Wheel();
 
     this.wheel.x = window.innerWidth / 2;
     this.wheel.y = window.innerHeight / 2;
 
-    // this.background.initPlayerMovement(this.player);
-
-    // this.addChild(this.background, this.player);
     this.addChild(this.background, this.wheel);
   }
 
