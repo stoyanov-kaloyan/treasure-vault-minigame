@@ -6,16 +6,22 @@ export class Wheel extends Container {
   private keyboard = Keyboard.getInstance();
   private rotationAngle: number = 0;
   private sprite: Sprite;
+  private shadow: Sprite;
 
   constructor() {
     super();
 
     this.sprite = new Sprite(Texture.from("/assets/handle.png"));
+    this.sprite.anchor.set(0.5, 0.5);
 
-    this.sprite.anchor.set(0.5);
+    this.shadow = new Sprite(Texture.from("/assets/handleShadow.png"));
+    this.shadow.anchor.set(0.5, 0.5);
+    this.shadow.alpha = 0.75;
+    this.shadow.position.set(30, 30);
 
-    this.scale.set(0.5);
+    this.scale.set(0.32);
 
+    this.addChild(this.shadow);
     this.addChild(this.sprite);
 
     this.keyboard.onAction(({ action, buttonState }) => {
@@ -39,6 +45,8 @@ export class Wheel extends Container {
   private rotateSprite(angle: number) {
     this.rotationAngle += angle;
     const rotationAngleInRadians = this.rotationAngle * (Math.PI / 180);
-    gsap.to(this, { rotation: rotationAngleInRadians, duration: 0.5 });
+
+    gsap.to(this.sprite, { rotation: rotationAngleInRadians, duration: 0.5 });
+    gsap.to(this.shadow, { rotation: rotationAngleInRadians, duration: 0.5 });
   }
 }
