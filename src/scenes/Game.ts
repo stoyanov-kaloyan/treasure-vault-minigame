@@ -1,47 +1,33 @@
 import config from "../config";
 import ParallaxBackground from "../prefabs/ParallaxBackground";
-import { Player } from "../prefabs/Player";
 import Scene from "../core/Scene";
-import SpineAnimation from "../core/SpineAnimation";
+import { Wheel } from "../prefabs/Wheel";
 
 export default class Game extends Scene {
   name = "Game";
 
-  private player!: Player;
   private background!: ParallaxBackground;
+  private wheel!: Wheel;
 
   load() {
     this.background = new ParallaxBackground(config.backgrounds.forest);
-    this.player = new Player();
+    this.wheel = new Wheel();
 
-    this.player.x = window.innerWidth / 2;
-    this.player.y = window.innerHeight - this.player.height / 3;
+    this.wheel.x = window.innerWidth / 2;
+    this.wheel.y = window.innerHeight / 2;
 
-    this.background.initPlayerMovement(this.player);
+    // this.background.initPlayerMovement(this.player);
 
-    this.addChild(this.background, this.player);
+    // this.addChild(this.background, this.player);
+    this.addChild(this.background, this.wheel);
   }
 
-  async start() {
-    // Example of how to play a spine animation
-    const vine = new SpineAnimation("vine-pro");
-
-    vine.stateData.setMix("grow", "grow", 0.5);
-
-    vine.x = 0;
-    vine.y = window.innerHeight / 2 - 50;
-
-    this.background.addChild(vine);
-
-    while (vine) {
-      await vine.play("grow");
-    }
-  }
+  async start() {}
 
   onResize(width: number, height: number) {
-    if (this.player) {
-      this.player.x = width / 2;
-      this.player.y = height - this.player.height / 3;
+    if (this.wheel) {
+      this.wheel.x = width / 2;
+      this.wheel.y = height / 2;
     }
 
     if (this.background) {
