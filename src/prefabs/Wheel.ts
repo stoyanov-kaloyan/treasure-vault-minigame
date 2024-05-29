@@ -19,7 +19,7 @@ export class Wheel extends Container {
     this.shadow.alpha = 0.75;
     this.shadow.position.set(30, 30);
 
-    this.scale.set(0.32);
+    // this.scale.set(0.3);
 
     this.addChild(this.shadow);
     this.addChild(this.sprite);

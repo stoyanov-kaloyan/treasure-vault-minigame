@@ -3,6 +3,8 @@ import { Container, Sprite, Texture } from "pixi.js";
 export default class StaticBackground extends Container {
   private sprite: Sprite;
 
+  public scalingFactor: number = 1;
+
   constructor(imagePath: string) {
     super();
 
@@ -22,6 +24,10 @@ export default class StaticBackground extends Container {
       width / this.sprite.texture.width,
       height / this.sprite.texture.height
     );
+
+    console.log("scaleFactor", scaleFactor);
+
+    this.scalingFactor = scaleFactor;
 
     this.sprite.width = this.sprite.texture.width * scaleFactor;
     this.sprite.height = this.sprite.texture.height * scaleFactor;

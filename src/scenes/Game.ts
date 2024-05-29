@@ -21,6 +21,9 @@ export default class Game extends Scene {
     this.door.x = window.innerWidth / 2 + 20;
     this.door.y = window.innerHeight / 2 - 10;
 
+    this.wheel.scale.set(this.background.scalingFactor);
+    this.door.scale.set(this.background.scalingFactor);
+
     this.addChild(this.background, this.door, this.wheel);
   }
 
@@ -30,11 +33,13 @@ export default class Game extends Scene {
     if (this.wheel) {
       this.wheel.x = width / 2 - 4;
       this.wheel.y = height / 2 - 10;
+      this.wheel.scale.set(this.background.scalingFactor);
     }
 
     if (this.door) {
       this.door.x = width / 2 + 20;
       this.door.y = height / 2 - 10;
+      this.door.scale.set(this.background.scalingFactor);
     }
 
     if (this.background) {
