@@ -67,7 +67,7 @@ export class Wheel extends Container {
     gsap.to(this.shadow, { rotation: angle, duration: 3 });
   }
 
-  private open() {
+  public open() {
     this.isOpen = true;
     gsap.to(this.sprite, { rotation: 0, duration: 0 });
     gsap.to(this.shadow, { rotation: 0, duration: 0 });
@@ -79,7 +79,7 @@ export class Wheel extends Container {
     this.shadow.scale.y = 0.9;
   }
 
-  private close() {
+  public close() {
     this.isOpen = false;
     gsap.to(this.sprite, { rotation: 0, duration: 0 });
     gsap.to(this.shadow, { rotation: 0, duration: 0 });

@@ -12,6 +12,10 @@ export default class Game extends Scene {
   private wheel!: Wheel;
   private door!: Door;
 
+  private code: Array<number> = [];
+  private playerCode: Array<number> = [];
+  private lastDirection: string = "";
+
   private keyboard = Keyboard.getInstance();
 
   load() {
@@ -37,20 +41,58 @@ export default class Game extends Scene {
     });
   }
 
-  async start() {}
+  async start() {
+    this.generateCode();
+  }
 
   onActionPress(action: keyof typeof Keyboard.actions) {
     switch (action) {
-      case "DOWN":
-        if (this.door.isOpen) {
-          this.door.close();
-        } else {
-          this.door.open();
-          this.triggerGlitter();
-        }
+      case "LEFT":
+        this.input("LEFT");
+        this.lastDirection = "LEFT";
+        break;
+      case "RIGHT":
+        this.input("RIGHT");
+        this.lastDirection = "RIGHT";
         break;
       default:
         break;
+    }
+  }
+
+  input(direction: string) {
+    if (this.lastDirection === direction) {
+      if (this.lastDirection === "RIGHT") {
+        this.playerCode[this.playerCode.length - 1] =
+          this.playerCode[this.playerCode.length - 1] + 1;
+      } else if (this.lastDirection === "LEFT") {
+        this.playerCode[this.playerCode.length - 1] =
+          this.playerCode[this.playerCode.length - 1] - 1;
+      }
+    } else {
+      if (direction === "RIGHT") {
+        this.playerCode.push(1);
+      } else {
+        this.playerCode.push(-1);
+      }
+    }
+    this.checkWin();
+    console.log(this.playerCode);
+  }
+
+  checkWin() {
+    if (this.playerCode.length < 3) {
+      return;
+    }
+    let playerCode = this.playerCode.slice(-3);
+    if (
+      playerCode[0] === this.code[0] &&
+      playerCode[1] === this.code[1] &&
+      playerCode[2] === this.code[2]
+    ) {
+      setTimeout(() => {
+        this.triggerWin();
+      }, 500);
     }
   }
 
@@ -75,5 +117,37 @@ export default class Game extends Scene {
   triggerGlitter() {
     const glitter = new GlitterEffect("/assets/blink.png", 3);
     this.addChild(glitter);
+  }
+
+  generateCode() {
+    let code = [];
+    let codeString = "";
+
+    for (let i = 0; i < 3; i++) {
+      code.push(Math.round(Math.random() * 8 + 1));
+      if (i === 1) {
+        code[i] = -code[i];
+      }
+      console.log(code[i]);
+      codeString +=
+        Math.abs(code[i]).toString() +
+        " " +
+        (code[i] < 0 ? "counterclockwise " : "clockwise ");
+    }
+
+    console.log(codeString);
+
+    this.code = code;
+  }
+
+  triggerWin() {
+    this.door.open();
+    this.wheel.open();
+    this.triggerGlitter();
+    setTimeout(() => {
+      this.door.close();
+      this.wheel.close();
+      this.wheel.reloadAnimation();
+    }, 3000);
   }
 }
