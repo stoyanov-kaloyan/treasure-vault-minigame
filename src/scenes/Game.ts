@@ -214,8 +214,8 @@ export default class Game extends Scene {
       this.background.resize(width, height);
     }
     if (this.timer) {
-      this.timer.y = height / 2 - 60;
-      this.timer.x = width / 2 - 382;
+      this.timer.y = height / 2 - 57;
+      this.timer.x = width / 2 - 380;
     }
   }
 
