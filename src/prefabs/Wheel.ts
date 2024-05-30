@@ -50,17 +50,17 @@ export class Wheel extends Container {
 
   public reloadAnimation(): Promise<void> {
     return new Promise((resolve) => {
-      const angle = (this.rotationAngle + 1200) * (Math.PI / 180);
       this.rotationAngle += 1200;
+      let angleInRadians = this.rotationAngle * (Math.PI / 180);
       gsap.to(this.sprite, {
-        rotation: angle,
+        rotation: angleInRadians,
         duration: 3,
         onComplete: () => {
           resolve();
         },
       });
       gsap.to(this.shadow, {
-        rotation: angle,
+        rotation: angleInRadians,
         duration: 3,
       });
     });
