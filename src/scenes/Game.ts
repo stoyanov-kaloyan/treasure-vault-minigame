@@ -106,8 +106,6 @@ export default class Game extends Scene {
   }
 
   checkWin() {
-    console.log(this.playerCode, this.code);
-
     if (
       Math.abs(this.playerCode[this.playerCode.length - 1]) >
       Math.abs(this.code[this.playerCode.length - 1])
