@@ -41,10 +41,29 @@ export default class Game extends Scene {
     this.keyboard.onAction(({ action, buttonState }) => {
       if (buttonState === "pressed") this.onActionPress(action);
     });
+
+    this.interactive = true;
+    this.on("pointerdown", this.onPointerDown.bind(this));
   }
 
   async start() {
     this.generateCode();
+  }
+
+  onPointerDown(event: any) {
+    const clickX = event.data.global.x;
+    const screenWidth = window.innerWidth;
+
+    if (this.resetting) return;
+    if (clickX < screenWidth / 2) {
+      this.input("LEFT");
+      this.lastDirection = "LEFT";
+      this.wheel.rotateLeft();
+    } else {
+      this.input("RIGHT");
+      this.lastDirection = "RIGHT";
+      this.wheel.rotateRight();
+    }
   }
 
   onActionPress(action: keyof typeof Keyboard.actions) {
