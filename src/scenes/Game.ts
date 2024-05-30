@@ -20,6 +20,11 @@ export default class Game extends Scene {
 
   private keyboard = Keyboard.getInstance();
 
+  private startTime!: number;
+  private elapsedTime: number = 0;
+  private timerInterval!: number;
+  private timerText!: Text;
+
   load() {
     this.background = new Background("/assets/bg.png");
     this.wheel = new Wheel();
@@ -42,7 +47,7 @@ export default class Game extends Scene {
       if (buttonState === "pressed") this.onActionPress(action);
     });
 
-    this.interactive = true;
+    this.eventMode = "dynamic";
     this.on("pointerdown", this.onPointerDown.bind(this));
   }
 
