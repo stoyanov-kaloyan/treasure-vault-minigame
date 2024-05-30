@@ -32,7 +32,7 @@ export default class Game extends Scene {
     this.wheel = new Wheel();
     this.door = new Door();
 
-    this.wheel.x = window.innerWidth / 2 - 4;
+    this.wheel.x = window.innerWidth / 2 - 10;
     this.wheel.y = window.innerHeight / 2 - 10;
 
     this.door.x = window.innerWidth / 2 + 20;
@@ -70,8 +70,10 @@ export default class Game extends Scene {
       fontName: "TitleFont",
     });
 
-    this.timer.y = window.innerHeight / 2 - 57;
-    this.timer.x = window.innerWidth / 2 - 380;
+    //position timer based on scaling factor
+    console.log(this.background.scalingFactor);
+    this.timer.y = window.innerHeight / 2 - this.background.scalingFactor * 180;
+    this.timer.x = window.innerWidth / 2 - this.background.scalingFactor * 1260;
 
     this.background.addChild(this.timer);
   }
@@ -206,7 +208,7 @@ export default class Game extends Scene {
 
   onResize(width: number, height: number) {
     if (this.wheel) {
-      this.wheel.x = width / 2 - 4;
+      this.wheel.x = width / 2 - 10;
       this.wheel.y = height / 2 - 10;
       this.wheel.scale.set(this.background.scalingFactor);
     }
@@ -221,8 +223,10 @@ export default class Game extends Scene {
       this.background.resize(width, height);
     }
     if (this.timer) {
-      this.timer.y = height / 2 - 57;
-      this.timer.x = width / 2 - 380;
+      this.timer.y =
+        window.innerHeight / 2 - this.background.scalingFactor * 180;
+      this.timer.x =
+        window.innerWidth / 2 - this.background.scalingFactor * 1260;
     }
   }
 
