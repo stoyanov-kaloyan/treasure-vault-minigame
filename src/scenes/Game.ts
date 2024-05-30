@@ -106,10 +106,18 @@ export default class Game extends Scene {
   }
 
   checkWin() {
+    console.log(this.playerCode, this.code);
+
+    if (
+      Math.abs(this.playerCode[this.playerCode.length - 1]) >
+      Math.abs(this.code[this.playerCode.length - 1])
+    ) {
+      this.triggerLoss();
+    }
     if (this.playerCode.length < 3) {
       return;
     }
-    let playerCode = this.playerCode.slice(-3);
+    let playerCode = this.playerCode;
     if (
       playerCode[0] === this.code[0] &&
       playerCode[1] === this.code[1] &&
@@ -121,11 +129,12 @@ export default class Game extends Scene {
     }
   }
 
-  triggerLose() {
+  triggerLoss() {
     this.playerCode = [];
     this.resetting = true;
     this.wheel.reloadAnimation().then(() => {
       this.resetting = false;
+      this.generateCode();
     });
   }
 
@@ -182,8 +191,9 @@ export default class Game extends Scene {
       this.wheel.close();
       this.wheel.reloadAnimation().then(() => {
         this.resetting = false;
+        this.playerCode = [];
+        this.generateCode();
       });
-      this.generateCode();
     }, 3000);
   }
 }
