@@ -70,14 +70,16 @@ export default class Game extends Scene {
     if (this.resetting) return;
     switch (action) {
       case "LEFT":
-        this.input("LEFT");
-        this.lastDirection = "LEFT";
-        this.wheel.rotateLeft();
+        this.wheel.rotateLeft().then(() => {
+          this.input("LEFT");
+          this.lastDirection = "LEFT";
+        });
         break;
       case "RIGHT":
-        this.input("RIGHT");
-        this.lastDirection = "RIGHT";
-        this.wheel.rotateRight();
+        this.wheel.rotateRight().then(() => {
+          this.input("RIGHT");
+          this.lastDirection = "RIGHT";
+        });
         break;
       default:
         break;
@@ -117,6 +119,14 @@ export default class Game extends Scene {
         this.triggerWin();
       }, 500);
     }
+  }
+
+  triggerLose() {
+    this.playerCode = [];
+    this.resetting = true;
+    this.wheel.reloadAnimation().then(() => {
+      this.resetting = false;
+    });
   }
 
   onResize(width: number, height: number) {

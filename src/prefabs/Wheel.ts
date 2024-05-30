@@ -25,19 +25,27 @@ export class Wheel extends Container {
   }
 
   public rotateLeft() {
-    this.rotateSprite(-60);
+    return this.rotateSprite(-60);
   }
 
   public rotateRight() {
-    this.rotateSprite(60);
+    return this.rotateSprite(60);
   }
 
-  private rotateSprite(angle: number) {
-    this.rotationAngle += angle;
-    const rotationAngleInRadians = this.rotationAngle * (Math.PI / 180);
+  private rotateSprite(angle: number): Promise<void> {
+    return new Promise((resolve) => {
+      this.rotationAngle += angle;
+      const rotationAngleInRadians = this.rotationAngle * (Math.PI / 180);
 
-    gsap.to(this.sprite, { rotation: rotationAngleInRadians, duration: 0.5 });
-    gsap.to(this.shadow, { rotation: rotationAngleInRadians, duration: 0.5 });
+      gsap.to(this.sprite, {
+        rotation: rotationAngleInRadians,
+        duration: 0.5,
+        onComplete: () => {
+          resolve();
+        },
+      });
+      gsap.to(this.shadow, { rotation: rotationAngleInRadians, duration: 0.5 });
+    });
   }
 
   public reloadAnimation(): Promise<void> {
