@@ -250,6 +250,7 @@ export default class Game extends Scene {
     this.wheel.open();
     this.triggerGlitter();
     this.resetting = true;
+    this.lastDirection = "";
     setTimeout(() => {
       this.door.close();
       this.wheel.close();
