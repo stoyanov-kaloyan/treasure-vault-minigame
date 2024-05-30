@@ -20,11 +20,6 @@ export default class Game extends Scene {
 
   private keyboard = Keyboard.getInstance();
 
-  private startTime!: number;
-  private elapsedTime: number = 0;
-  private timerInterval!: number;
-  private timerText!: Text;
-
   load() {
     this.background = new Background("/assets/bg.png");
     this.wheel = new Wheel();
@@ -100,23 +95,38 @@ export default class Game extends Scene {
         this.playerCode[this.playerCode.length - 1] =
           this.playerCode[this.playerCode.length - 1] - 1;
       }
+      if (
+        Math.abs(this.playerCode[this.playerCode.length - 1]) >
+        Math.abs(this.code[this.playerCode.length - 1])
+      ) {
+        this.triggerLoss();
+      }
     } else {
       if (direction === "RIGHT") {
         this.playerCode.push(1);
       } else {
+        if (this.playerCode.length === 0) {
+          this.triggerLoss();
+        }
         this.playerCode.push(-1);
+      }
+      if (
+        Math.abs(this.playerCode[this.playerCode.length - 2]) <
+        Math.abs(this.code[this.playerCode.length - 2])
+      ) {
+        this.triggerLoss();
       }
     }
     this.checkWin();
   }
 
   checkWin() {
-    if (
-      Math.abs(this.playerCode[this.playerCode.length - 1]) >
-      Math.abs(this.code[this.playerCode.length - 1])
-    ) {
-      this.triggerLoss();
-    }
+    // if (
+    //   Math.abs(this.playerCode[this.playerCode.length - 1]) >
+    //   Math.abs(this.code[this.playerCode.length - 1])
+    // ) {
+    //   this.triggerLoss();
+    // }
     if (this.playerCode.length < 3) {
       return;
     }
@@ -128,12 +138,13 @@ export default class Game extends Scene {
     ) {
       setTimeout(() => {
         this.triggerWin();
-      }, 500);
+      }, 300);
     }
   }
 
   triggerLoss() {
     this.playerCode = [];
+    this.lastDirection = "";
     this.resetting = true;
     this.wheel.reloadAnimation().then(() => {
       this.resetting = false;
@@ -180,7 +191,7 @@ export default class Game extends Scene {
         (code[i] < 0 ? "counterclockwise " : "clockwise ");
     }
 
-    console.log(codeString);
+    console.log("Code: ", codeString);
     this.code = code;
   }
 
