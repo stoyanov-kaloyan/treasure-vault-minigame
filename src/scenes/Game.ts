@@ -151,10 +151,9 @@ export default class Game extends Scene {
     setTimeout(() => {
       this.door.close();
       this.wheel.close();
-      this.wheel.reloadAnimation();
-      setTimeout(() => {
+      this.wheel.reloadAnimation().then(() => {
         this.resetting = false;
-      }, 3000);
+      });
       this.generateCode();
     }, 3000);
   }
