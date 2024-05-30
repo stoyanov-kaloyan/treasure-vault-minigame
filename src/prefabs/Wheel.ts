@@ -7,6 +7,7 @@ export class Wheel extends Container {
   private rotationAngle: number = 0;
   private sprite: Sprite;
   private shadow: Sprite;
+  private isOpen: boolean = false;
 
   constructor() {
     super();
@@ -32,13 +33,20 @@ export class Wheel extends Container {
   private onActionPress(action: keyof typeof Keyboard.actions) {
     switch (action) {
       case "LEFT":
+        if (this.isOpen) return;
         this.rotateSprite(-60);
         break;
       case "RIGHT":
+        if (this.isOpen) return;
         this.rotateSprite(60);
         break;
       case "UP":
+        if (this.isOpen) return;
         this.reloadAnimation();
+        break;
+      case "DOWN":
+        this.isOpen ? this.close() : this.open();
+        break;
       default:
         break;
     }
@@ -57,5 +65,29 @@ export class Wheel extends Container {
     this.rotationAngle += 1200;
     gsap.to(this.sprite, { rotation: angle, duration: 3 });
     gsap.to(this.shadow, { rotation: angle, duration: 3 });
+  }
+
+  private open() {
+    this.isOpen = true;
+    gsap.to(this.sprite, { rotation: 0, duration: 0 });
+    gsap.to(this.shadow, { rotation: 0, duration: 0 });
+    this.sprite.anchor.set(-3.43, 0.5);
+    this.shadow.anchor.set(-3.3, 0.52);
+    this.shadow.scale.x = 0.3;
+    this.sprite.scale.x = 0.3;
+    this.sprite.scale.y = 0.9;
+    this.shadow.scale.y = 0.9;
+  }
+
+  private close() {
+    this.isOpen = false;
+    gsap.to(this.sprite, { rotation: 0, duration: 0 });
+    gsap.to(this.shadow, { rotation: 0, duration: 0 });
+    this.sprite.anchor.set(0.5, 0.5);
+    this.shadow.anchor.set(0.5, 0.5);
+    this.sprite.scale.x = 1;
+    this.shadow.scale.x = 1;
+    this.sprite.scale.y = 1;
+    this.shadow.scale.y = 1;
   }
 }
