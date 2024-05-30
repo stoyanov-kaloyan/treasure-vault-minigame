@@ -16,6 +16,8 @@ export default class Game extends Scene {
   private playerCode: Array<number> = [];
   private lastDirection: string = "";
 
+  private resetting: boolean = false;
+
   private keyboard = Keyboard.getInstance();
 
   load() {
@@ -46,6 +48,7 @@ export default class Game extends Scene {
   }
 
   onActionPress(action: keyof typeof Keyboard.actions) {
+    if (this.resetting) return;
     switch (action) {
       case "LEFT":
         this.input("LEFT");
@@ -77,7 +80,6 @@ export default class Game extends Scene {
       }
     }
     this.checkWin();
-    console.log(this.playerCode);
   }
 
   checkWin() {
@@ -122,13 +124,13 @@ export default class Game extends Scene {
   generateCode() {
     let code = [];
     let codeString = "";
+    this.lastDirection = "";
 
     for (let i = 0; i < 3; i++) {
       code.push(Math.round(Math.random() * 8 + 1));
       if (i === 1) {
         code[i] = -code[i];
       }
-      console.log(code[i]);
       codeString +=
         Math.abs(code[i]).toString() +
         " " +
@@ -136,7 +138,6 @@ export default class Game extends Scene {
     }
 
     console.log(codeString);
-
     this.code = code;
   }
 
@@ -144,10 +145,15 @@ export default class Game extends Scene {
     this.door.open();
     this.wheel.open();
     this.triggerGlitter();
+    this.resetting = true;
     setTimeout(() => {
       this.door.close();
       this.wheel.close();
       this.wheel.reloadAnimation();
+      setTimeout(() => {
+        this.resetting = false;
+      }, 3000);
+      this.generateCode();
     }, 3000);
   }
 }
