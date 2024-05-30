@@ -48,9 +48,10 @@ export default class AssetLoader {
       const match = assetPathRegexp.exec(assetPath);
 
       if (!match || !match.groups) {
-        return console.error(
-          `Invalid asset path: ${assetPath}, should match ${assetPathRegexp}`
-        );
+        // return console.error(
+        //   `Invalid asset path: ${assetPath}, should match ${assetPathRegexp}`
+        // );
+        return;
       }
 
       const { group, category, name, ext } = match.groups;
