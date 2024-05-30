@@ -53,10 +53,12 @@ export default class Game extends Scene {
       case "LEFT":
         this.input("LEFT");
         this.lastDirection = "LEFT";
+        this.wheel.rotateLeft();
         break;
       case "RIGHT":
         this.input("RIGHT");
         this.lastDirection = "RIGHT";
+        this.wheel.rotateRight();
         break;
       default:
         break;

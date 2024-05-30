@@ -1,9 +1,7 @@
 import { Container, Sprite, Texture } from "pixi.js";
-import Keyboard from "../core/Keyboard";
 import gsap from "gsap";
 
 export class Wheel extends Container {
-  private keyboard = Keyboard.getInstance();
   private rotationAngle: number = 0;
   private sprite: Sprite;
   private shadow: Sprite;
@@ -24,32 +22,14 @@ export class Wheel extends Container {
 
     this.addChild(this.shadow);
     this.addChild(this.sprite);
-
-    this.keyboard.onAction(({ action, buttonState }) => {
-      if (buttonState === "pressed") this.onActionPress(action);
-    });
   }
 
-  private onActionPress(action: keyof typeof Keyboard.actions) {
-    switch (action) {
-      case "LEFT":
-        if (this.isOpen) return;
-        this.rotateSprite(-60);
-        break;
-      case "RIGHT":
-        if (this.isOpen) return;
-        this.rotateSprite(60);
-        break;
-      case "UP":
-        if (this.isOpen) return;
-        this.reloadAnimation();
-        break;
-      case "DOWN":
-        this.isOpen ? this.close() : this.open();
-        break;
-      default:
-        break;
-    }
+  public rotateLeft() {
+    this.rotateSprite(-60);
+  }
+
+  public rotateRight() {
+    this.rotateSprite(60);
   }
 
   private rotateSprite(angle: number) {
