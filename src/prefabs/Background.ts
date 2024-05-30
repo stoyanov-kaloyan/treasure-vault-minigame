@@ -25,8 +25,6 @@ export default class StaticBackground extends Container {
       height / this.sprite.texture.height
     );
 
-    console.log("scaleFactor", scaleFactor);
-
     this.scalingFactor = scaleFactor;
 
     this.sprite.width = this.sprite.texture.width * scaleFactor;
