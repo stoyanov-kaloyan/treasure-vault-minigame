@@ -4,6 +4,7 @@ import Background from "../prefabs/Background";
 import { Door } from "../prefabs/Door";
 import { GlitterEffect } from "../prefabs/GlitterEffect";
 import Keyboard from "../core/Keyboard";
+import { BitmapFont, BitmapText } from "pixi.js";
 
 export default class Game extends Scene {
   name = "Game";
@@ -11,6 +12,7 @@ export default class Game extends Scene {
   private background!: Background;
   private wheel!: Wheel;
   private door!: Door;
+  private timer!: BitmapText;
 
   private code: Array<number> = [];
   private playerCode: Array<number> = [];
@@ -19,6 +21,9 @@ export default class Game extends Scene {
   private resetting: boolean = false;
 
   private keyboard = Keyboard.getInstance();
+
+  private time = 0;
+  private timerStopped = false;
 
   load() {
     this.background = new Background("/assets/bg.png");
@@ -44,6 +49,42 @@ export default class Game extends Scene {
 
     this.eventMode = "dynamic";
     this.on("pointerdown", this.onPointerDown.bind(this));
+
+    BitmapFont.from(
+      "TitleFont",
+      {
+        fontFamily: "Verdana",
+        fontSize: 16,
+        strokeThickness: 1,
+        fill: "white",
+      },
+      {
+        chars: [":", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      }
+    );
+
+    this.timer = new BitmapText("00:00", {
+      fontName: "TitleFont",
+    });
+
+    this.timer.y = window.innerHeight / 2 - 57;
+    this.timer.x = window.innerWidth / 2 - 380;
+
+    this.background.addChild(this.timer);
+  }
+
+  update(delta: number) {
+    if (this.timerStopped) return;
+    this.time += delta;
+
+    const minutes = Math.floor(this.time / 60000);
+    const seconds = Math.floor((this.time % 60000) / 1000);
+
+    const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+
+    this.timer.text = formattedTime;
   }
 
   async start() {
@@ -138,17 +179,20 @@ export default class Game extends Scene {
     ) {
       setTimeout(() => {
         this.triggerWin();
-      }, 300);
+      }, 500);
     }
   }
 
   triggerLoss() {
+    this.timerStopped = true;
     this.playerCode = [];
     this.lastDirection = "";
     this.resetting = true;
     this.wheel.reloadAnimation().then(() => {
       this.resetting = false;
       this.generateCode();
+      this.time = 0;
+      this.timerStopped = false;
     });
   }
 
@@ -167,6 +211,10 @@ export default class Game extends Scene {
 
     if (this.background) {
       this.background.resize(width, height);
+    }
+    if (this.timer) {
+      this.timer.y = height / 2 - 60;
+      this.timer.x = width / 2 - 382;
     }
   }
 
@@ -196,6 +244,7 @@ export default class Game extends Scene {
   }
 
   triggerWin() {
+    this.timerStopped = true;
     this.door.open();
     this.wheel.open();
     this.triggerGlitter();
@@ -207,6 +256,8 @@ export default class Game extends Scene {
         this.resetting = false;
         this.playerCode = [];
         this.generateCode();
+        this.time = 0;
+        this.timerStopped = false;
       });
     }, 3000);
   }
