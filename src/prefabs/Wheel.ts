@@ -39,12 +39,12 @@ export class Wheel extends Container {
 
       gsap.to(this.sprite, {
         rotation: rotationAngleInRadians,
-        duration: 0.5,
+        duration: 0.3,
         onComplete: () => {
           resolve();
         },
       });
-      gsap.to(this.shadow, { rotation: rotationAngleInRadians, duration: 0.5 });
+      gsap.to(this.shadow, { rotation: rotationAngleInRadians, duration: 0.3 });
     });
   }
 

@@ -22,6 +22,8 @@ export default class Game extends Scene {
 
   private keyboard = Keyboard.getInstance();
 
+  private animating: boolean = false;
+
   private time = 0;
   private timerStopped = false;
 
@@ -109,18 +111,22 @@ export default class Game extends Scene {
   }
 
   onActionPress(action: keyof typeof Keyboard.actions) {
-    if (this.resetting) return;
+    if (this.resetting || this.animating) return;
     switch (action) {
       case "LEFT":
+        this.animating = true;
         this.wheel.rotateLeft().then(() => {
           this.input("LEFT");
           this.lastDirection = "LEFT";
+          this.animating = false;
         });
         break;
       case "RIGHT":
+        this.animating = true;
         this.wheel.rotateRight().then(() => {
           this.input("RIGHT");
           this.lastDirection = "RIGHT";
+          this.animating = false;
         });
         break;
       default:
@@ -178,9 +184,10 @@ export default class Game extends Scene {
       playerCode[1] === this.code[1] &&
       playerCode[2] === this.code[2]
     ) {
+      this.resetting = true;
       setTimeout(() => {
         this.triggerWin();
-      }, 500);
+      }, 300);
     }
   }
 
@@ -249,7 +256,6 @@ export default class Game extends Scene {
     this.door.open();
     this.wheel.open();
     this.triggerGlitter();
-    this.resetting = true;
     this.lastDirection = "";
     setTimeout(() => {
       this.door.close();
