@@ -28,6 +28,8 @@ export default class Game extends Scene {
   private time = 0;
   private timerStopped = false;
 
+  private sequenceLength: number = 3;
+
   load() {
     this.background = new Background("/assets/bg.png");
     this.wheel = new Wheel();
@@ -162,8 +164,9 @@ export default class Game extends Scene {
         this.playerCode.push(-1);
       }
       if (
+        this.playerCode.length > 1 &&
         Math.abs(this.playerCode[this.playerCode.length - 2]) <
-        Math.abs(this.code[this.playerCode.length - 2])
+          Math.abs(this.code[this.playerCode.length - 2])
       ) {
         this.triggerLoss();
       }
@@ -172,21 +175,18 @@ export default class Game extends Scene {
   }
 
   checkWin() {
-    // if (
-    //   Math.abs(this.playerCode[this.playerCode.length - 1]) >
-    //   Math.abs(this.code[this.playerCode.length - 1])
-    // ) {
-    //   this.triggerLoss();
-    // }
-    if (this.playerCode.length < 3) {
+    if (this.playerCode.length < this.sequenceLength) {
       return;
     }
     let playerCode = this.playerCode;
-    if (
-      playerCode[0] === this.code[0] &&
-      playerCode[1] === this.code[1] &&
-      playerCode[2] === this.code[2]
-    ) {
+    let isWin = true;
+    for (let i = 0; i < this.sequenceLength; i++) {
+      if (playerCode[i] !== this.code[i]) {
+        isWin = false;
+        break;
+      }
+    }
+    if (isWin) {
       this.resetting = true;
       wait(0.3).then(() => {
         this.triggerWin();
@@ -241,9 +241,9 @@ export default class Game extends Scene {
     let codeString = "";
     this.lastDirection = "";
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.sequenceLength; i++) {
       code.push(Math.round(Math.random() * 8 + 1));
-      if (i === 1) {
+      if (i % 2 === 1) {
         code[i] = -code[i];
       }
       codeString +=
