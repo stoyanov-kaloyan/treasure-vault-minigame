@@ -115,24 +115,22 @@ export default class Game extends Scene {
     }
   }
 
-  onActionPress(action: keyof typeof Keyboard.actions) {
+  async onActionPress(action: keyof typeof Keyboard.actions) {
     if (this.resetting || this.animating) return;
     switch (action) {
       case "LEFT":
         this.animating = true;
-        this.wheel.rotateLeft().then(() => {
-          this.input("LEFT");
-          this.lastDirection = "LEFT";
-          this.animating = false;
-        });
+        await this.wheel.rotateLeft();
+        this.input("LEFT");
+        this.lastDirection = "LEFT";
+        this.animating = false;
         break;
       case "RIGHT":
         this.animating = true;
-        this.wheel.rotateRight().then(() => {
-          this.input("RIGHT");
-          this.lastDirection = "RIGHT";
-          this.animating = false;
-        });
+        await this.wheel.rotateRight();
+        this.input("RIGHT");
+        this.lastDirection = "RIGHT";
+        this.animating = false;
         break;
       default:
         break;
@@ -174,7 +172,7 @@ export default class Game extends Scene {
     this.checkWin();
   }
 
-  checkWin() {
+  async checkWin() {
     if (this.playerCode.length < this.sequenceLength) {
       return;
     }
@@ -188,23 +186,21 @@ export default class Game extends Scene {
     }
     if (isWin) {
       this.resetting = true;
-      wait(0.3).then(() => {
-        this.triggerWin();
-      });
+      await wait(0.3);
+      this.triggerWin();
     }
   }
 
-  triggerLoss() {
+  async triggerLoss() {
     this.timerStopped = true;
     this.playerCode = [];
     this.lastDirection = "";
     this.resetting = true;
-    this.wheel.reloadAnimation().then(() => {
-      this.resetting = false;
-      this.generateCode();
-      this.time = 0;
-      this.timerStopped = false;
-    });
+    await this.wheel.reloadAnimation();
+    this.resetting = false;
+    this.generateCode();
+    this.time = 0;
+    this.timerStopped = false;
   }
 
   onResize(width: number, height: number) {
@@ -256,22 +252,20 @@ export default class Game extends Scene {
     this.code = code;
   }
 
-  triggerWin() {
+  async triggerWin() {
     this.timerStopped = true;
     this.door.open();
     this.wheel.open();
     this.triggerGlitter();
     this.lastDirection = "";
-    wait(3).then(() => {
-      this.door.close();
-      this.wheel.close();
-      this.wheel.reloadAnimation().then(() => {
-        this.resetting = false;
-        this.playerCode = [];
-        this.generateCode();
-        this.time = 0;
-        this.timerStopped = false;
-      });
-    });
+    await wait(3);
+    this.door.close();
+    this.wheel.close();
+    await this.wheel.reloadAnimation();
+    this.resetting = false;
+    this.playerCode = [];
+    this.generateCode();
+    this.time = 0;
+    this.timerStopped = false;
   }
 }
