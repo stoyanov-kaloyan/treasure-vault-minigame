@@ -5,6 +5,7 @@ import { Door } from "../prefabs/Door";
 import { GlitterEffect } from "../prefabs/GlitterEffect";
 import Keyboard from "../core/Keyboard";
 import { BitmapFont, BitmapText } from "pixi.js";
+import { wait } from "../utils/misc";
 
 export default class Game extends Scene {
   name = "Game";
@@ -187,9 +188,9 @@ export default class Game extends Scene {
       playerCode[2] === this.code[2]
     ) {
       this.resetting = true;
-      setTimeout(() => {
+      wait(0.3).then(() => {
         this.triggerWin();
-      }, 300);
+      });
     }
   }
 
@@ -261,7 +262,7 @@ export default class Game extends Scene {
     this.wheel.open();
     this.triggerGlitter();
     this.lastDirection = "";
-    setTimeout(() => {
+    wait(3).then(() => {
       this.door.close();
       this.wheel.close();
       this.wheel.reloadAnimation().then(() => {
@@ -271,6 +272,6 @@ export default class Game extends Scene {
         this.time = 0;
         this.timerStopped = false;
       });
-    }, 3000);
+    });
   }
 }
